@@ -1,31 +1,34 @@
-import pygame
-import grid
-from win32api import GetSystemMetrics
+import sys, pygame, grid, os
 
+# Center environment, initialize pygame
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 pygame.init()
-width, height = GetSystemMetrics(0), GetSystemMetrics(1)
+
+# Initialize Field
+info = pygame.display.Info()
+width, height = info.current_w, info.current_h - 50
 size = (width, height)
 
-pygame.display.set_caption("CONWAY'S GAME OF LIFE")
-screen = pygame.display.set_mode(size)
+pygame.display.set_caption("Conway's Game Of Life")
+screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 
+# Create Grid
 scalar = 40
-offset = 1
+border = 1
+Grid = grid.Grid(width, height, scalar, border)
+Grid.random_field()
 
-Grid = grid.Grid(width, height, scalar, offset)
-
+# Colors
 black = (0, 0, 0)
-blue = (0, 14, 71)
+blue = (1, 33, 105)
 white = (255, 255, 255)
 
-run = True
-while run:
+while True:
     screen.fill(black)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False
+            pygame.quit()
+            sys.exit()
 
-    Grid.conway(off_color=white, on_color=blue, surface=screen)
+    Grid.conway(dead=white, live=blue, surface=screen)
     pygame.display.update()
-
-pygame.quit()
