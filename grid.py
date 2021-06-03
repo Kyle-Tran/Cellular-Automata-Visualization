@@ -26,6 +26,7 @@ class Grid:
                     pygame.draw.rect(surface, dead,
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
 
+    def update(self):
         # rules for transitions between generations
         new_array = np.ndarray(shape=self.size)
         for x in range(self.rows):
@@ -58,7 +59,16 @@ class Grid:
                     neighbors += self.curr_array[x_edge][y_edge]
         return neighbors
 
+    def click(self, pos):
+        x, y = int(pos[0]/self.scale), int(pos[1]/self.scale)
+        if self.curr_array[x][y] == 1:
+            self.curr_array[x][y] = 0
+        else:
+            self.curr_array[x][y] = 1
+
+
     def random_field(self):
         for x in range(self.rows):
             for y in range(self.columns):
                 self.curr_array[x][y] = random.randint(0, 1)
+                # self.curr_array[x][y] = random.choices([0, 1], [9, 1])[0] # 90% of spawning dead
