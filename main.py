@@ -9,6 +9,7 @@ info = pygame.display.Info()
 width, height = info.current_w, info.current_h - 50
 size = (width, height)
 screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+# screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 
 # Create Grid
 scalar = 80
@@ -26,12 +27,24 @@ clock = pygame.time.Clock()
 speed = 30
 
 screen.fill(black)
+Grid.conway(dead=white, live=blue, surface=screen)
+Grid.update()
 
 def game():
     generation = 0
     while True:
         pygame.display.set_caption("Conway's Game Of Life - Generation " + str(generation))
         clock.tick(speed)
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_SPACE]:
+            Grid.update()
+            generation += 1
+
+        if (keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]) and keys[pygame.K_r]:
+            Grid.reset()
+            generation = 0
+            pygame.display.set_caption("Conway's Game Of Life - Generation " + str(generation))
 
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -47,7 +60,6 @@ def game():
                 sys.exit()
 
         Grid.conway(dead=white, live=blue, surface=screen)
-        #Grid.update()
         pygame.display.update()
 
 

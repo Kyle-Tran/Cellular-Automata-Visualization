@@ -71,3 +71,9 @@ class Grid:
             for y in range(self.columns):
                 self.curr_array[x][y] = random.randint(0, 1)
                 # self.curr_array[x][y] = random.choices([0, 1], [9, 1])[0] # 90% of spawning dead
+
+    def reset(self):
+        for x in range(self.rows):
+            for y in range(self.columns):
+                 self.curr_array[x][y] = 0
+
