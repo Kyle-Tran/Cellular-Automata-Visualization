@@ -12,7 +12,7 @@ class Grid:
         self.size = (self.rows, self.columns)
 
         self.curr_array = np.ndarray(shape=self.size)
-        self.border = border # Lines between cells
+        self.border = border  # Lines between cells
 
     def conway(self, dead, live, surface):
         # updates cells
@@ -52,7 +52,7 @@ class Grid:
         # check 8 cells around current cell
         for n in range(-1, 2):
             for m in range(-1, 2):
-                if not (n == m == 0): # Ignore self during check
+                if not (n == m == 0):  # Ignore self during check
                     # Since field is finite, stitch edges to yield toroidal array
                     x_edge = (x + n + self.rows) % self.rows
                     y_edge = (y + m + self.columns) % self.columns
@@ -60,12 +60,11 @@ class Grid:
         return neighbors
 
     def click(self, pos):
-        x, y = int(pos[0]/self.scale), int(pos[1]/self.scale)
+        x, y = int(pos[0] / self.scale), int(pos[1] / self.scale)
         if self.curr_array[x][y] == 1:
             self.curr_array[x][y] = 0
         else:
             self.curr_array[x][y] = 1
-
 
     def random_field(self):
         for x in range(self.rows):
