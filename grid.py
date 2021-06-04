@@ -11,11 +11,11 @@ class Grid:
         self.columns = int(height / scale)
         self.size = (self.rows, self.columns)
 
-        self.curr_array = np.ndarray(shape=self.size)
+        self.curr_array = np.ndarray(shape=self.size) # Field as 2d array
         self.border = border  # Lines between cells
 
-    def conway(self, dead, live, surface):
-        # updates cells
+    def update(self, dead, live, surface):
+        # updates cells to be dead or live
         for x in range(self.rows):
             for y in range(self.columns):
                 x_pos, y_pos = x * self.scale, y * self.scale
@@ -26,7 +26,7 @@ class Grid:
                     pygame.draw.rect(surface, dead,
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
 
-    def update(self):
+    def transition(self):
         # rules for transitions between generations
         new_array = np.ndarray(shape=self.size)
         for x in range(self.rows):
@@ -44,7 +44,7 @@ class Grid:
                 else:
                     new_array[x][y] = 0
 
-        # update array
+        # update previous field with next generation's field
         self.curr_array = new_array
 
     def get_neighbors(self, x, y):
@@ -60,6 +60,7 @@ class Grid:
         return neighbors
 
     def click(self, pos):
+        # Clicking on cell will change it's state from dead to live or vice versa
         x, y = int(pos[0] / self.scale), int(pos[1] / self.scale)
         if self.curr_array[x][y] == 1:
             self.curr_array[x][y] = 0
@@ -67,12 +68,14 @@ class Grid:
             self.curr_array[x][y] = 1
 
     def random_field(self):
+        # Generates random field of cells
         for x in range(self.rows):
             for y in range(self.columns):
                 self.curr_array[x][y] = random.randint(0, 1)
                 # self.curr_array[x][y] = random.choices([0, 1], [9, 1])[0] # 90% of spawning dead
 
     def reset(self):
+        # Clears entire board to all dead cells
         for x in range(self.rows):
             for y in range(self.columns):
                  self.curr_array[x][y] = 0

@@ -4,7 +4,7 @@ import sys, pygame, grid, os
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pygame.init()
 
-# Initialize Field
+# Setup window for different displays
 info = pygame.display.Info()
 width, height = info.current_w, info.current_h - 50
 size = (width, height)
@@ -12,7 +12,7 @@ screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 # screen = pygame.display.set_mode(size, pygame.RESIZABLE)
 
 # Create Grid
-scalar = 80
+scalar = 40
 border = 1
 Grid = grid.Grid(width, height, scalar, border)
 # Grid.random_field()
@@ -26,9 +26,10 @@ white = (255, 255, 255)
 clock = pygame.time.Clock()
 speed = 30
 
+# Initialize field
 screen.fill(black)
-Grid.conway(dead=white, live=blue, surface=screen)
-Grid.update()
+Grid.update(dead=white, live=blue, surface=screen)
+Grid.transition()
 
 def game():
     generation = 0
@@ -37,10 +38,12 @@ def game():
         clock.tick(speed)
         keys = pygame.key.get_pressed()
 
+        # Continually iterates through generations while space is held
         if keys[pygame.K_SPACE]:
-            Grid.update()
+            Grid.transition()
             generation += 1
 
+        # Resets board and generation to 0 using command Ctrl + R
         if (keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]) and keys[pygame.K_r]:
             Grid.reset()
             generation = 0
@@ -52,14 +55,14 @@ def game():
                 if button == 1:  # change cell state with left click
                     pos = pygame.mouse.get_pos()
                     Grid.click(pos)
-                elif button == 3:  # iterate through next generation right click
-                    Grid.update()
+                elif button == 3:  # iterate through next generation once right click
+                    Grid.transition()
                     generation += 1
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-        Grid.conway(dead=white, live=blue, surface=screen)
+        Grid.update(dead=white, live=blue, surface=screen)
         pygame.display.update()
 
 
