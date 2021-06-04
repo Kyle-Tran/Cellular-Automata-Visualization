@@ -75,7 +75,7 @@ class Conway:
                 # self.curr_array[x][y] = random.choices([0, 1], [9, 1])[0] # 90% of spawning dead
 
     def reset(self):
-        # Clears entire board to all dead cells
+        # Clears entire field to all dead cells
         for x in range(self.rows):
             for y in range(self.columns):
                 self.curr_array[x][y] = 0
@@ -98,7 +98,7 @@ class RPS:
         for x in range(self.rows):
             for y in range(self.columns):
                 x_pos, y_pos = x * self.scale, y * self.scale
-                if -1 < self.curr_array[x][y] < 1: #Fix rounding error near 0
+                if -1 < self.curr_array[x][y] < 1:  # Fix rounding error near 0
                     pygame.draw.rect(surface, (255, 255, 255),
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
                 elif self.curr_array[x][y] == -1:
@@ -155,11 +155,12 @@ class RPS:
         # Generates random field of cells
         for x in range(self.rows):
             for y in range(self.columns):
-                #self.curr_array[x][y] = random.randint(0, 1)
+                # self.curr_array[x][y] = random.randint(0, 1)
                 self.curr_array[x][y] = random.choices([-1, 1, 2])[0]
 
     def reset(self):
-        # Clears entire board to all dead cells
+        # Clears entire field to all dead cells
         for x in range(self.rows):
             for y in range(self.columns):
                 self.curr_array[x][y] = 0
+
