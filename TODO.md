@@ -5,3 +5,4 @@
 - Langton's ants
 - Conway setups
 - setup.py
+- GUI
