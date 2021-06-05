@@ -1,4 +1,5 @@
-import sys, pygame, grid, os
+import sys, pygame, os
+from project import grid
 
 
 def conway_game(dead, live, random):
@@ -171,7 +172,7 @@ if __name__ == '__main__':
 
     scalar = 40  # Scales monitor resolution down by factor of scalar
                  # Recommended 30-60 for average CPU and 10-20 for powerful CPU)
-    percentRandom = .5  # Percent of random cells that are live (0 < x < 1)
+    percentRandom = .4  # Percent of random cells that are live (0 < x < 1)
                         # Recommend value between 0.1 < x < 0.5
     numColors = 3  # 3 for ternary, 5 for quinary
 
