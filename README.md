@@ -30,5 +30,7 @@ and choose parameters in console
     Iterate continuously (Spacebar)
     Choose Ternary or Quinary field (numColors in main function)
 
-- Select FPS and Scale for field
-- Change color options in main function
+**Other**
+
+    Select FPS and Scale for field
+    Change color options in main function
