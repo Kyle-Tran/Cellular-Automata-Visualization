@@ -1,7 +1,7 @@
 import pygame
 import numpy as np
 import random
-import matplotlib.pyplot as plt
+
 
 class Conway:
     def __init__(self, width, height, scale, border):
@@ -81,13 +81,9 @@ class Conway:
                 self.curr_array[x][y] = 0
 
 
-def most_freq(neighbors):
-    return max(set(neighbors), key=neighbors.count)
-
-
 class RPS:
     # Rock = -1, White = 0, Paper = 1, Scissors = 2, Lizard = 3, Spock = 4
-    def __init__(self, width, height, scale, border):
+    def __init__(self, width, height, scale, border, numColors):
         self.scale = scale
 
         self.rows = int(width / scale)
@@ -96,25 +92,27 @@ class RPS:
 
         self.curr_array = np.ndarray(shape=self.size)  # Field as 2d array
         self.border = border  # Lines between cells
+        self.numColors = numColors
 
     def update(self, rock, paper, scissors, lizard, spock, surface):
         # updates cells to be dead or live
         for x in range(self.rows):
             for y in range(self.columns):
                 x_pos, y_pos = x * self.scale, y * self.scale
-                if -1 < self.curr_array[x][y] < 1:  # Fix rounding error near 0
+                curr = self.curr_array[x][y]
+                if -1 < curr < 1:  # Fix rounding error near 0
                     pygame.draw.rect(surface, (255, 255, 255),
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
-                elif self.curr_array[x][y] == -1:
+                elif curr == -1:
                     pygame.draw.rect(surface, rock,
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
-                elif self.curr_array[x][y] == 1:
+                elif curr == 1:
                     pygame.draw.rect(surface, paper,
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
-                elif self.curr_array[x][y] == 2:
+                elif curr == 2:
                     pygame.draw.rect(surface, scissors,
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
-                elif self.curr_array[x][y] == 3:
+                elif curr == 3:
                     pygame.draw.rect(surface, lizard,
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
                 else:
@@ -131,16 +129,7 @@ class RPS:
                 neighbors, dominating = self.get_neighbors(x, y, state)
                 # print(dominating)
                 if neighbors > 2:
-                    if state == -1:
-                        new_array[x][y] = most_freq(dominating)
-                    elif state == 1:
-                        new_array[x][y] = most_freq(dominating)
-                    elif state == 2:
-                        new_array[x][y] = most_freq(dominating)
-                    elif state == 3:
-                        new_array[x][y] = most_freq(dominating)
-                    else:
-                        new_array[x][y] = most_freq(dominating)
+                    new_array[x][y] = most_freq(dominating)
                 else:
                     new_array[x][y] = state
 
@@ -157,16 +146,19 @@ class RPS:
                     x_edge = (x + n + self.rows) % self.rows
                     y_edge = (y + m + self.columns) % self.columns
                     neighbor = self.curr_array[x_edge][y_edge]
-                    # if (state == -1 and neighbor == 1) or (state == 1 and neighbor == 2) \
-                    #         or (state == 2 and neighbor == -1):
-                    if (state == -1 and (neighbor == 3 or neighbor == 4)) or \
-                            (state == 1 and (neighbor == 4 or neighbor == -1)) \
-                            or (state == 2 and (neighbor == -1 or neighbor == 1)) \
-                            or (state == 3 and (neighbor == 1 or neighbor == 2)) \
-                            or (state == 4 and (neighbor == 2 or neighbor == 3)):
-                        total += 1
-                        num_dominating.append(neighbor)
-
+                    if self.numColors == 3:
+                        if (state == -1 and neighbor == 1) or (state == 1 and neighbor == 2) \
+                                or (state == 2 and neighbor == -1):
+                            total += 1
+                            num_dominating.append(neighbor)
+                    elif self.numColors == 5:
+                        if (state == -1 and (neighbor == 3 or neighbor == 4)) or \
+                                (state == 1 and (neighbor == 4 or neighbor == -1)) \
+                                or (state == 2 and (neighbor == -1 or neighbor == 1)) \
+                                or (state == 3 and (neighbor == 1 or neighbor == 2)) \
+                                or (state == 4 and (neighbor == 2 or neighbor == 3)):
+                            total += 1
+                            num_dominating.append(neighbor)
         return total, num_dominating
 
     def click(self, pos, choice):
@@ -179,11 +171,17 @@ class RPS:
         for x in range(self.rows):
             for y in range(self.columns):
                 # self.curr_array[x][y] = random.randint(0, 1)
-                # self.curr_array[x][y] = random.choices([-1, 1, 2])[0]
-                self.curr_array[x][y] = random.choices([-1, 1, 2, 3, 4])[0]
+                if self.numColors == 3:
+                    self.curr_array[x][y] = random.choices([-1, 1, 2])[0]
+                elif self.numColors == 5:
+                    self.curr_array[x][y] = random.choices([-1, 1, 2, 3, 4])[0]
 
     def reset(self):
         # Clears entire field to all dead cells
         for x in range(self.rows):
             for y in range(self.columns):
                 self.curr_array[x][y] = 0
+
+
+def most_freq(neighbors):
+    return max(set(neighbors), key=neighbors.count)

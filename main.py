@@ -1,46 +1,12 @@
 import sys, pygame, grid, os
 
-# Center environment, initialize pygame
-os.environ['SDL_VIDEO_CENTERED'] = '1'
-pygame.init()
 
-# Setup window for different displays
-info = pygame.display.Info()
-width, height = info.current_w, info.current_h - 50
-size = (width, height)
-
-# Create Grid
-scalar = 30
-border = 0
-conway = grid.Conway(width, height, scalar, border)
-rps = grid.RPS(width, height, scalar, border)
-
-# Colors
-black = (0, 0, 0)
-blue = (1, 33, 105)
-white = (255, 255, 255)
-
-orange = (255, 127, 0)
-light_blue = (31, 120, 180)
-red = (228, 26, 28)
-
-p0 = (239,187,255)
-p1 = (216, 150, 255)
-p2 = (190, 41, 236)
-p3 = (128, 0, 128)
-p4 = (102,0,102)
-
-# speed between generations
-clock = pygame.time.Clock()
-speed = 60
-
-
-def conway_game(random):
+def conway_game(dead, live, random):
     # Initialize field
     screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
     # screen = pygame.display.set_mode(size, pygame.RESIZABLE)
     screen.fill(black)
-    conway.update(dead=white, live=blue, surface=screen)
+    conway.update(dead, live, surface=screen)
     conway.transition()
     if random == "y" or random == "Y":
         conway.random_field()
@@ -86,14 +52,14 @@ def conway_game(random):
         pygame.display.update()
 
 
-def rps_game(random):
+def rps_game(rock, paper, scissors, lizard, spock, random):
     # Initialize field
     screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
     # screen = pygame.display.set_mode(size, pygame.RESIZABLE)
     screen.fill(black)
     # rps.update(rock=orange, paper=light_blue, scissors=red, surface=screen)
     # rps.update(rock=p1, paper=p2, scissors=p3, surface=screen)
-    rps.update(rock=p0, paper=p1, scissors=p2, lizard=p3, spock=p4, surface=screen)
+    rps.update(rock, paper, scissors, lizard, spock, surface=screen)
     rps.transition()
     if random == "y" or random == "Y":
         rps.random_field()
@@ -101,7 +67,8 @@ def rps_game(random):
     generation = 0
     while True:
         # pygame.display.set_caption("Rock, Paper, Scissors Cellular Automata - Generation " + str(generation))
-        pygame.display.set_caption("Rock, Paper, Scissors, Lizard, Spock Cellular Automata - Generation " + str(generation))
+        pygame.display.set_caption(
+            "Rock, Paper, Scissors, Lizard, Spock Cellular Automata - Generation " + str(generation))
 
         clock.tick(speed)
         keys = pygame.key.get_pressed()
@@ -155,18 +122,57 @@ def rps_game(random):
 
         # rps.update(rock=orange, paper=light_blue, scissors=red, surface=screen)
         # rps.update(rock=p1, paper=p2, scissors=p3, surface=screen)
-        rps.update(rock=p0, paper=p1, scissors=p2, lizard=p3, spock=p4, surface=screen)
+        rps.update(rock, paper, scissors, lizard, spock, surface=screen)
         pygame.display.update()
 
 
 if __name__ == '__main__':
-    mode, random = "", ""
+    # Colors
+    black = (0, 0, 0)
+    blue = (1, 33, 105)
+    white = (255, 255, 255)
+
+    orange = (255, 127, 0)
+    light_blue = (31, 120, 180)
+    red = (228, 26, 28)
+
+    rock = (239, 187, 255)
+    paper = (216, 150, 255)
+    scissors = (190, 41, 236)
+    lizard = (128, 0, 128)
+    spock = (102, 0, 102)
+
+    # Center environment, initialize pygame
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
+    pygame.init()
+
+    # Setup window for different displays
+    info = pygame.display.Info()
+    width, height = info.current_w, info.current_h - 50
+    size = (width, height)
+
+    # speed between generations
+    clock = pygame.time.Clock()
+    speed = 60
+
+    # Selections
+    mode, random, border = "", "", None
     while mode != "1" and mode != "2":
-        mode = input("Select mode (1: Conway's Game of Life, 2: Rock Paper Scissors Cellular Automata):  ")
+        mode = input("Select mode (1: Conway's Game of Life; 2: Rock Paper Scissors Cellular Automata):  ")
     while random != "y" and random != "n" and random != "Y" and random != "N":
         random = input("Would you like a randomly generated field? (y/n): ")
+    while border != "y" and border != "n" and border != "Y" and border != "N":
+        border = input("Would you like cell borders? (y/n): ")
+    if border == "y" or border == "Y":
+        border = 1
+    else:
+        border = 0
+
+    scalar = 25
+    conway = grid.Conway(width, height, scalar, border)
+    rps = grid.RPS(width, height, scalar, border, 5)
 
     if mode == "1":
-        conway_game(random)
+        conway_game(white, blue, random)
     elif mode == "2":
-        rps_game(random)
+        rps_game(rock, paper, scissors, lizard, spock, random)
