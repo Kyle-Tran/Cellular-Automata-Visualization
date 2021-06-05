@@ -1,5 +1,5 @@
 import sys, pygame, os
-from project import grid
+import grid
 
 
 def conway_game(dead, live, random):
