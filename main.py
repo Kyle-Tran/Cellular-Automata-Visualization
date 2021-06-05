@@ -14,7 +14,7 @@ def conway_game(dead, live, random):
     generation = 0
     while True:
         pygame.display.set_caption("Conway's Game Of Life - Generation " + str(generation))
-        clock.tick(speed)
+        clock.tick(fps)
         keys = pygame.key.get_pressed()
 
         # Continually iterates through generations while space is held
@@ -48,7 +48,7 @@ def conway_game(dead, live, random):
                 pygame.quit()
                 sys.exit()
 
-        conway.update(dead=white, live=blue, surface=screen)
+        conway.update(dead, live, surface=screen)
         pygame.display.update()
 
 
@@ -70,7 +70,7 @@ def rps_game(rock, paper, scissors, lizard, spock, random):
         pygame.display.set_caption(
             "Rock, Paper, Scissors, Lizard, Spock Cellular Automata - Generation " + str(generation))
 
-        clock.tick(speed)
+        clock.tick(fps)
         keys = pygame.key.get_pressed()
 
         # Continually iterates through generations while space is held
@@ -129,7 +129,7 @@ def rps_game(rock, paper, scissors, lizard, spock, random):
 if __name__ == '__main__':
     # Colors
     black = (0, 0, 0)
-    blue = (1, 33, 105)
+    duke_blue = (1, 33, 105)
     white = (255, 255, 255)
 
     orange = (255, 127, 0)
@@ -151,9 +151,10 @@ if __name__ == '__main__':
     width, height = info.current_w, info.current_h - 50
     size = (width, height)
 
-    # speed between generations
+    # fps between generations
     clock = pygame.time.Clock()
-    speed = 60
+    fps = 60  # Speed between generations
+             # Recommend number between 1 < x < 60
 
     # Selections
     mode, random, border = "", "", None
@@ -168,11 +169,15 @@ if __name__ == '__main__':
     else:
         border = 0
 
-    scalar = 25
-    conway = grid.Conway(width, height, scalar, border)
-    rps = grid.RPS(width, height, scalar, border, 5)
+    scalar = 40  # Scales monitor resolution down by factor of scalar
+                 # Recommended 30-60 for average CPU and 10-20 for powerful CPU)
+    percentRandom = .5  # Percent of random cells that are live (0 < x < 1)
+                        # Recommend value between 0.1 < x < 0.5
+    numColors = 3  # 3 for ternary, 5 for quinary
 
+    conway = grid.Conway(width, height, scalar, border, percentRandom)
+    rps = grid.RPS(width, height, scalar, border, numColors)
     if mode == "1":
-        conway_game(white, blue, random)
+        conway_game(white, duke_blue, random)
     elif mode == "2":
         rps_game(rock, paper, scissors, lizard, spock, random)

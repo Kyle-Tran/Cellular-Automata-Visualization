@@ -4,7 +4,7 @@ import random
 
 
 class Conway:
-    def __init__(self, width, height, scale, border):
+    def __init__(self, width, height, scale, border, percentRandom):
         self.scale = scale
 
         self.rows = int(width / scale)
@@ -13,6 +13,7 @@ class Conway:
 
         self.curr_array = np.ndarray(shape=self.size)  # Field as 2d array
         self.border = border  # Lines between cells
+        self.percentRandom = percentRandom
 
     def update(self, dead, live, surface):
         # updates cells to be dead or live
@@ -71,8 +72,9 @@ class Conway:
         # Generates random field of cells
         for x in range(self.rows):
             for y in range(self.columns):
-                self.curr_array[x][y] = random.randint(0, 1)
-                # self.curr_array[x][y] = random.choices([0, 1], [9, 1])[0] # 90% of spawning dead
+                # self.curr_array[x][y] = random.randint(0, 1)
+                self.curr_array[x][y] = random.choices(
+                    [0, 1], [1 - self.percentRandom, self.percentRandom])[0]  # Fills grid with percentRandom live cells
 
     def reset(self):
         # Clears entire field to all dead cells
