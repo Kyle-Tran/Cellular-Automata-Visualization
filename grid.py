@@ -1,7 +1,7 @@
 import pygame
 import numpy as np
 import random
-
+import matplotlib.pyplot as plt
 
 class Conway:
     def __init__(self, width, height, scale, border):
@@ -81,8 +81,12 @@ class Conway:
                 self.curr_array[x][y] = 0
 
 
+def most_freq(neighbors):
+    return max(set(neighbors), key=neighbors.count)
+
+
 class RPS:
-    # Rock = -1, White = 0, Paper = 1, Scissors = 2
+    # Rock = -1, White = 0, Paper = 1, Scissors = 2, Lizard = 3, Spock = 4
     def __init__(self, width, height, scale, border):
         self.scale = scale
 
@@ -93,7 +97,7 @@ class RPS:
         self.curr_array = np.ndarray(shape=self.size)  # Field as 2d array
         self.border = border  # Lines between cells
 
-    def update(self, rock, paper, scissors, surface):
+    def update(self, rock, paper, scissors, lizard, spock, surface):
         # updates cells to be dead or live
         for x in range(self.rows):
             for y in range(self.columns):
@@ -107,8 +111,14 @@ class RPS:
                 elif self.curr_array[x][y] == 1:
                     pygame.draw.rect(surface, paper,
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
-                else:
+                elif self.curr_array[x][y] == 2:
                     pygame.draw.rect(surface, scissors,
+                                     [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
+                elif self.curr_array[x][y] == 3:
+                    pygame.draw.rect(surface, lizard,
+                                     [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
+                else:
+                    pygame.draw.rect(surface, spock,
                                      [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
 
     def transition(self):
@@ -117,14 +127,20 @@ class RPS:
         for x in range(self.rows):
             for y in range(self.columns):
                 state = self.curr_array[x][y]
-                neighbors = self.get_neighbors(x, y, state)
+                # neighbors = self.get_neighbors(x, y, state)
+                neighbors, dominating = self.get_neighbors(x, y, state)
+                # print(dominating)
                 if neighbors > 2:
                     if state == -1:
-                        new_array[x][y] = 1
+                        new_array[x][y] = most_freq(dominating)
                     elif state == 1:
-                        new_array[x][y] = 2
+                        new_array[x][y] = most_freq(dominating)
+                    elif state == 2:
+                        new_array[x][y] = most_freq(dominating)
+                    elif state == 3:
+                        new_array[x][y] = most_freq(dominating)
                     else:
-                        new_array[x][y] = -1
+                        new_array[x][y] = most_freq(dominating)
                 else:
                     new_array[x][y] = state
 
@@ -132,7 +148,7 @@ class RPS:
         self.curr_array = new_array
 
     def get_neighbors(self, x, y, state):
-        total = 0
+        total, num_dominating = 0, []
         # check 8 cells around current cell
         for n in range(-1, 2):
             for m in range(-1, 2):
@@ -141,10 +157,17 @@ class RPS:
                     x_edge = (x + n + self.rows) % self.rows
                     y_edge = (y + m + self.columns) % self.columns
                     neighbor = self.curr_array[x_edge][y_edge]
-                    if (state == -1 and neighbor == 1) or (state == 1 and neighbor == 2) \
-                            or (state == 2 and neighbor == -1):
+                    # if (state == -1 and neighbor == 1) or (state == 1 and neighbor == 2) \
+                    #         or (state == 2 and neighbor == -1):
+                    if (state == -1 and (neighbor == 3 or neighbor == 4)) or \
+                            (state == 1 and (neighbor == 4 or neighbor == -1)) \
+                            or (state == 2 and (neighbor == -1 or neighbor == 1)) \
+                            or (state == 3 and (neighbor == 1 or neighbor == 2)) \
+                            or (state == 4 and (neighbor == 2 or neighbor == 3)):
                         total += 1
-        return total
+                        num_dominating.append(neighbor)
+
+        return total, num_dominating
 
     def click(self, pos, choice):
         # Clicking on cell will change it's state from dead to live or vice versa
@@ -156,11 +179,11 @@ class RPS:
         for x in range(self.rows):
             for y in range(self.columns):
                 # self.curr_array[x][y] = random.randint(0, 1)
-                self.curr_array[x][y] = random.choices([-1, 1, 2])[0]
+                # self.curr_array[x][y] = random.choices([-1, 1, 2])[0]
+                self.curr_array[x][y] = random.choices([-1, 1, 2, 3, 4])[0]
 
     def reset(self):
         # Clears entire field to all dead cells
         for x in range(self.rows):
             for y in range(self.columns):
                 self.curr_array[x][y] = 0
-

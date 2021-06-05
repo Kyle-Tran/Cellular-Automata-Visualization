@@ -10,7 +10,7 @@ width, height = info.current_w, info.current_h - 50
 size = (width, height)
 
 # Create Grid
-scalar = 40
+scalar = 30
 border = 0
 conway = grid.Conway(width, height, scalar, border)
 rps = grid.RPS(width, height, scalar, border)
@@ -24,9 +24,11 @@ orange = (255, 127, 0)
 light_blue = (31, 120, 180)
 red = (228, 26, 28)
 
+p0 = (239,187,255)
 p1 = (216, 150, 255)
 p2 = (190, 41, 236)
 p3 = (128, 0, 128)
+p4 = (102,0,102)
 
 # speed between generations
 clock = pygame.time.Clock()
@@ -90,14 +92,17 @@ def rps_game(random):
     # screen = pygame.display.set_mode(size, pygame.RESIZABLE)
     screen.fill(black)
     # rps.update(rock=orange, paper=light_blue, scissors=red, surface=screen)
-    rps.update(rock=p1, paper=p2, scissors=p3, surface=screen)
+    # rps.update(rock=p1, paper=p2, scissors=p3, surface=screen)
+    rps.update(rock=p0, paper=p1, scissors=p2, lizard=p3, spock=p4, surface=screen)
     rps.transition()
     if random == "y" or random == "Y":
         rps.random_field()
 
     generation = 0
     while True:
-        pygame.display.set_caption("Rock, Paper, Scissors Cellular Automata - Generation " + str(generation))
+        # pygame.display.set_caption("Rock, Paper, Scissors Cellular Automata - Generation " + str(generation))
+        pygame.display.set_caption("Rock, Paper, Scissors, Lizard, Spock Cellular Automata - Generation " + str(generation))
+
         clock.tick(speed)
         keys = pygame.key.get_pressed()
 
@@ -110,16 +115,21 @@ def rps_game(random):
         if (keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]) and keys[pygame.K_r]:
             rps.reset()
             generation = 0
-            pygame.display.set_caption("Rock, Paper, Scissors Cellular Automata - Generation " + str(generation))
+            # pygame.display.set_caption("Rock, Paper, Scissors Cellular Automata - Generation " + str(generation))
+            pygame.display.set_caption(
+                "Rock, Paper, Scissors, Lizard, Spock Cellular Automata - Generation " + str(generation))
 
         # Similar as reset above, but randomizes field using command Ctrl + T
         if (keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]) and keys[pygame.K_t]:
             rps.reset()
             rps.random_field()
             generation = 0
-            pygame.display.set_caption("Rock, Paper, Scissors Cellular Automata - Generation " + str(generation))
+            # pygame.display.set_caption("Rock, Paper, Scissors Cellular Automata - Generation " + str(generation))
+            pygame.display.set_caption(
+                "Rock, Paper, Scissors, Lizard, Spock Cellular Automata - Generation " + str(generation))
 
         for event in pygame.event.get():
+            # Rock = -1, White = 0, Paper = 1, Scissors = 2, Lizard = 3, Spock = 4
             if event.type == pygame.MOUSEBUTTONDOWN:
                 button, choice = event.button, 0
                 if keys[pygame.K_1]:  # Hold 1 for rock
@@ -128,6 +138,10 @@ def rps_game(random):
                     choice = 1
                 if keys[pygame.K_3]:  # Hold 3 for scissors
                     choice = 2
+                if keys[pygame.K_4]:  # Hold 4 for lizard
+                    choice = 3
+                if keys[pygame.K_5]:  # Hold 5 for Spock
+                    choice = 4
 
                 if button == 1:  # change cell state with left click
                     pos = pygame.mouse.get_pos()
@@ -140,7 +154,8 @@ def rps_game(random):
                 sys.exit()
 
         # rps.update(rock=orange, paper=light_blue, scissors=red, surface=screen)
-        rps.update(rock=p1, paper=p2, scissors=p3, surface=screen)
+        # rps.update(rock=p1, paper=p2, scissors=p3, surface=screen)
+        rps.update(rock=p0, paper=p1, scissors=p2, lizard=p3, spock=p4, surface=screen)
         pygame.display.update()
 
 
