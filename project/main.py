@@ -127,6 +127,59 @@ def rps_game(rock, paper, scissors, lizard, spock, random):
         pygame.display.update()
 
 
+def langtons_ant():
+    # Initialize field
+    screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+    # screen = pygame.display.set_mode(size, pygame.RESIZABLE)
+    screen.fill(black)
+    langton.reset()
+    langton.update(screen)
+
+    generation = 0
+    while True:
+        pygame.display.set_caption(
+            "Langston's Ant - Generation " + str(generation))
+        clock.tick(fps)
+        keys = pygame.key.get_pressed()
+
+        # Continually iterates through generations while space is held
+        if keys[pygame.K_SPACE]:
+            langton.transition()
+            generation += 1
+
+        # Resets field and generation to 0 using command Ctrl + R
+        if (keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]) and keys[pygame.K_r]:
+            langton.reset()
+            generation = 0
+            pygame.display.set_caption(
+                "Langston's Ant - Generation " + str(generation))
+
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                button, choice = event.button, 'N'
+                if keys[pygame.K_UP]:
+                    choice = "N"
+                if keys[pygame.K_RIGHT]:
+                    choice = "E"
+                if keys[pygame.K_DOWN]:
+                    choice = "S"
+                if keys[pygame.K_LEFT]:
+                    choice = "W"
+
+                if button == 1:  # change cell state with left click
+                    pos = pygame.mouse.get_pos()
+                    langton.click(pos, choice)
+                elif button == 3:  # iterate through next generation once right click
+                    langton.transition()
+                    generation += 1
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        langton.update(screen)
+        pygame.display.update()
+
+
 if __name__ == '__main__':
     # Colors
     black = (0, 0, 0)
@@ -159,10 +212,12 @@ if __name__ == '__main__':
 
     # Selections
     mode, random, border = "", "", None
-    while mode != "1" and mode != "2":
-        mode = input("Select mode (1: Conway's Game of Life; 2: Rock Paper Scissors Cellular Automata):  ")
-    while random != "y" and random != "n" and random != "Y" and random != "N":
-        random = input("Would you like a randomly generated field? (y/n): ")
+    while mode != "1" and mode != "2" and mode != "3":
+        mode = input("Select mode (1: Conway's Game of Life; 2: Rock Paper Scissors Cellular Automata; "
+                     "3: Langton's Ant):  ")
+    if mode != "3":
+        while random != "y" and random != "n" and random != "Y" and random != "N":
+            random = input("Would you like a randomly generated field? (y/n): ")
     while border != "y" and border != "n" and border != "Y" and border != "N":
         border = input("Would you like cell borders? (y/n): ")
     if border == "y" or border == "Y":
@@ -176,9 +231,15 @@ if __name__ == '__main__':
                         # Recommend value between 0.1 < x < 0.5
     numColors = 3  # 3 for ternary, 5 for quinary
 
+    colors = [orange, light_blue]
+    rules = "RL"
+
     conway = grid.Conway(width, height, scalar, border, percentRandom)
     rps = grid.RPS(width, height, scalar, border, numColors)
+    langton = grid.Langton(width, height, scalar, border, colors, rules)
     if mode == "1":
         conway_game(white, duke_blue, random)
     elif mode == "2":
         rps_game(rock, paper, scissors, lizard, spock, random)
+    elif mode == "3":
+        langtons_ant()

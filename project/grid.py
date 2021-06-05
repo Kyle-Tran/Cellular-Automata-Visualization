@@ -187,3 +187,69 @@ class RPS:
 
 def most_freq(neighbors):
     return max(set(neighbors), key=neighbors.count)
+
+
+class Langton:
+    def __init__(self, width, height, scale, border, colors, rules):
+        self.scale = scale
+
+        self.rows = int(width / scale)
+        self.columns = int(height / scale)
+        self.size = (self.rows, self.columns)
+
+        self.curr_array = np.ndarray(shape=self.size)  # Field as 2d array
+        self.border = border  # Lines between cells
+
+        # Colors [(x,y,z), ..., (xn,yn,zn)], Rules = "RL"
+        self.cyclic = {colors[i]: rules[i] for i in range(len(rules))}  # {(x,y,z):R, ... (xn,yn,zn):L}
+        self.direction = "N"  # N, E, S, W
+        self.ant = (-1, -1)
+        self.prev_color = (255, 255, 255)
+
+    def update(self, surface):
+        # updates cells to be dead or live
+        ant_x, ant_y = self.scale*np.array(self.ant)
+        pygame.draw.rect(surface, (255, 0, 0),
+                         [ant_x, ant_y, self.scale - self.border, self.scale - self.border])
+        for x in range(self.rows):
+            for y in range(self.columns):
+                x_pos, y_pos = x * self.scale, y * self.scale
+                if self.curr_array[x][y] == 0:
+                    pygame.draw.rect(surface, (255, 255, 255),
+                                     [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
+
+
+    def transition(self):
+        # rules for transitions between generations
+        new_array = np.ndarray(shape=self.size)
+        curr_xPos, curr_yPos = self.ant
+        curr_color = self.curr_array[curr_xPos][curr_yPos]
+
+
+    def get_neighbors(self, x, y):
+        neighbors = 0
+        # check 8 cells around current cell
+        for n in range(-1, 2):
+            for m in range(-1, 2):
+                if not (n == m == 0):  # Ignore self during check
+                    # Since field is finite, stitch edges to yield toroidal array
+                    x_edge = (x + n + self.rows) % self.rows
+                    y_edge = (y + m + self.columns) % self.columns
+                    neighbors += self.curr_array[x_edge][y_edge]
+        return neighbors
+
+    def click(self, pos, direction):
+        # Clicking on cell spawns ant in specified direction
+        print("click, " + direction)
+        x, y = int(pos[0]/self.scale), int(pos[1]/self.scale)
+        self.ant = (x, y)
+        if not direction:
+            self.direction = "N"  # default to N direction
+        else:
+            self.direction = direction
+
+    def reset(self):
+        # Clears entire field to all dead cells
+        for x in range(self.rows):
+            for y in range(self.columns):
+                self.curr_array[x][y] = 0
