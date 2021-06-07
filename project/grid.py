@@ -201,10 +201,13 @@ class Langton:
         self.border = border  # Lines between cells
 
         # Colors [(x,y,z), ..., (xn,yn,zn)], Rules = "RL"
+        self.rules = rules
+        self.colors = colors
+        #self.colorIdx = {i: colors[i] for i in range(len(colors))}  # {0:(x,y,z),..., n:(xn, yn, zn)}
         self.cyclic = {colors[i]: rules[i] for i in range(len(rules))}  # {(x,y,z):R, ... (xn,yn,zn):L}
         self.direction = "N"  # N, E, S, W
         self.ant = (-1, -1)
-        self.prev_color = (255, 255, 255)
+        self.spawn = (255, 255, 255)
 
     def update(self, surface):
         # updates cells to be dead or live
@@ -241,12 +244,14 @@ class Langton:
     def click(self, pos, direction):
         # Clicking on cell spawns ant in specified direction
         print("click, " + direction)
+        if self.ant != (-1, -1):  # There is an ant on the field currently
+            self.curr_array[self.ant[0]][self.ant[1]] = 0  # On clicking, deletes previous ant
+
+        # Creates new ant
         x, y = int(pos[0]/self.scale), int(pos[1]/self.scale)
         self.ant = (x, y)
-        if not direction:
-            self.direction = "N"  # default to N direction
-        else:
-            self.direction = direction
+        self.curr_array[x][y] = -1
+        self.direction = direction
 
     def reset(self):
         # Clears entire field to all dead cells
