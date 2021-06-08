@@ -132,24 +132,24 @@ def langtons_ant():
     screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
     # screen = pygame.display.set_mode(size, pygame.RESIZABLE)
     screen.fill(black)
-    langton.reset()
-    langton.update(screen)
+    langton.reset(screen)
+    langton.transition(screen)
 
     generation = 0
     while True:
         pygame.display.set_caption(
             "Langston's Ant - Generation " + str(generation))
-        clock.tick(fps)
+        # clock.tick(fps)
         keys = pygame.key.get_pressed()
 
         # Continually iterates through generations while space is held
         if keys[pygame.K_SPACE]:
-            langton.transition()
+            langton.transition(screen)
             generation += 1
 
         # Resets field and generation to 0 using command Ctrl + R
         if (keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]) and keys[pygame.K_r]:
-            langton.reset()
+            langton.reset(screen)
             generation = 0
             pygame.display.set_caption(
                 "Langston's Ant - Generation " + str(generation))
@@ -168,15 +168,14 @@ def langtons_ant():
 
                 if button == 1:  # change cell state with left click
                     pos = pygame.mouse.get_pos()
-                    langton.click(pos, choice)
+                    langton.click(pos, choice, screen)
                 elif button == 3:  # iterate through next generation once right click
-                    langton.transition()
+                    langton.transition(screen)
                     generation += 1
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-        langton.update(screen)
         pygame.display.update()
 
 
@@ -208,7 +207,7 @@ if __name__ == '__main__':
     # fps between generations
     clock = pygame.time.Clock()
     fps = 60  # Speed between generations
-             # Recommend number between 1 < x < 60
+              # Recommend number between 1 < x < 60
 
     # Selections
     mode, random, border = "", "", None
@@ -225,18 +224,19 @@ if __name__ == '__main__':
     else:
         border = 0
 
-    scalar = 40  # Scales monitor resolution down by factor of scalar
+    scalar = 4  # Scales monitor resolution down by factor of scalar
                  # Recommended 30-60 for average CPU and 10-20 for powerful CPU)
     percentRandom = .4  # Percent of random cells that are live (0 < x < 1)
                         # Recommend value between 0.1 < x < 0.5
     numColors = 3  # 3 for ternary, 5 for quinary
 
-    colors = [orange, light_blue]
     rules = "RL"
+    colors = [black, white]
 
     conway = grid.Conway(width, height, scalar, border, percentRandom)
     rps = grid.RPS(width, height, scalar, border, numColors)
     langton = grid.Langton(width, height, scalar, border, colors, rules)
+
     if mode == "1":
         conway_game(white, duke_blue, random)
     elif mode == "2":

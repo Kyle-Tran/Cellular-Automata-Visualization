@@ -203,58 +203,98 @@ class Langton:
         # Colors [(x,y,z), ..., (xn,yn,zn)], Rules = "RL"
         self.rules = rules
         self.colors = colors
-        #self.colorIdx = {i: colors[i] for i in range(len(colors))}  # {0:(x,y,z),..., n:(xn, yn, zn)}
-        self.cyclic = {colors[i]: rules[i] for i in range(len(rules))}  # {(x,y,z):R, ... (xn,yn,zn):L}
         self.direction = "N"  # N, E, S, W
         self.ant = (-1, -1)
-        self.spawn = (255, 255, 255)
 
-    def update(self, surface):
-        # updates cells to be dead or live
-        ant_x, ant_y = self.scale*np.array(self.ant)
-        pygame.draw.rect(surface, (255, 0, 0),
-                         [ant_x, ant_y, self.scale - self.border, self.scale - self.border])
-        for x in range(self.rows):
-            for y in range(self.columns):
-                x_pos, y_pos = x * self.scale, y * self.scale
-                if self.curr_array[x][y] == 0:
-                    pygame.draw.rect(surface, (255, 255, 255),
-                                     [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
-
-
-    def transition(self):
+    def transition(self, surface):
         # rules for transitions between generations
-        new_array = np.ndarray(shape=self.size)
-        curr_xPos, curr_yPos = self.ant
-        curr_color = self.curr_array[curr_xPos][curr_yPos]
+        ant_xpos, ant_ypos = self.ant[0], self.ant[1]
+        ant_xcoord, ant_ycoord = ant_xpos * self.scale, ant_ypos * self.scale
+        #print(self.ant)
+        #print(self.curr_array[ant_xpos][ant_ypos])
+        if self.curr_array[ant_xpos][ant_ypos] == -1:  # curr cell is white (default)
+            self.curr_array[ant_xpos][ant_ypos] = 0
+            self.rotate(self.rules[0])
+            #print(self.direction)
+            pygame.draw.rect(surface, self.colors[0],
+                             [ant_xcoord, ant_ycoord, self.scale - self.border, self.scale - self.border])
 
+            self.move()
+            pygame.draw.rect(surface, (255, 0, 0),
+                             [self.ant[0] * self.scale, self.ant[1] * self.scale,
+                              self.scale - self.border, self.scale - self.border])
 
-    def get_neighbors(self, x, y):
-        neighbors = 0
-        # check 8 cells around current cell
-        for n in range(-1, 2):
-            for m in range(-1, 2):
-                if not (n == m == 0):  # Ignore self during check
-                    # Since field is finite, stitch edges to yield toroidal array
-                    x_edge = (x + n + self.rows) % self.rows
-                    y_edge = (y + m + self.columns) % self.columns
-                    neighbors += self.curr_array[x_edge][y_edge]
-        return neighbors
+        else:
+            update_idx = (int(self.curr_array[ant_xpos][ant_ypos]) + 1) % len(self.colors)
+            self.curr_array[ant_xpos][ant_ypos] = update_idx
+            self.rotate(self.rules[update_idx])
+            pygame.draw.rect(surface, self.colors[update_idx],
+                             [ant_xcoord, ant_ycoord, self.scale - self.border, self.scale - self.border])
+            self.move()
+            pygame.draw.rect(surface, (255, 0, 0),
+                             [self.ant[0] * self.scale, self.ant[1] * self.scale,
+                              self.scale - self.border, self.scale - self.border])
 
-    def click(self, pos, direction):
+    def move(self):
+        #print(self.direction)
+        x, y = self.ant[0], self.ant[1]
+        addx, addy = (x + 1) % self.rows, (y+1) % self.columns
+        minusx, minusy = (x - 1) % self.rows, (y - 1) % self.columns
+        if self.direction == "N":
+            self.ant = (x, minusy)
+        elif self.direction == "E":
+            self.ant = (addx, y)
+        elif self.direction == "S":
+            self.ant = (x, addy)
+        elif self.direction == "W":
+            self.ant = (minusx, y)
+
+    def rotate(self, rule):
+        if rule == "R":
+            if self.direction == "N":
+                self.direction = "E"
+            elif self.direction == "E":
+                self.direction = "S"
+            elif self.direction == "S":
+                self.direction = "W"
+            elif self.direction == "W":
+                self.direction = "N"
+
+        elif rule == "L":
+            if self.direction == "N":
+                self.direction = "W"
+            elif self.direction == "E":
+                self.direction = "N"
+            elif self.direction == "S":
+                self.direction = "E"
+            elif self.direction == "W":
+                self.direction = "S"
+
+    def click(self, pos, direction, surface):
         # Clicking on cell spawns ant in specified direction
-        print("click, " + direction)
+        # print("click, " + direction)
+        x, y = int(pos[0] / self.scale), int(pos[1] / self.scale)
+        prev_x, prev_y = self.ant[0] * self.scale, self.ant[1] * self.scale
+        new_x, new_y = x * self.scale, y * self.scale
         if self.ant != (-1, -1):  # There is an ant on the field currently
-            self.curr_array[self.ant[0]][self.ant[1]] = 0  # On clicking, deletes previous ant
+            # make sure previous spot where ant was can still update later
+            self.curr_array[self.ant[0], self.ant[1]] = -1
+            # On clicking, deletes previous ant
+            pygame.draw.rect(surface, (255, 255, 255),
+                             [prev_x, prev_y, self.scale - self.border, self.scale - self.border])
 
         # Creates new ant
-        x, y = int(pos[0]/self.scale), int(pos[1]/self.scale)
         self.ant = (x, y)
-        self.curr_array[x][y] = -1
+        # print(self.ant)
+        pygame.draw.rect(surface, (255, 0, 0),
+                         [new_x, new_y, self.scale - self.border, self.scale - self.border])
         self.direction = direction
 
-    def reset(self):
+    def reset(self, surface):
         # Clears entire field to all dead cells
         for x in range(self.rows):
             for y in range(self.columns):
-                self.curr_array[x][y] = 0
+                x_pos, y_pos = x * self.scale, y * self.scale
+                self.curr_array[x][y] = -1  # initial field array to all zeros
+                pygame.draw.rect(surface, (255, 255, 255),
+                                 [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
