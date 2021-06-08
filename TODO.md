@@ -9,3 +9,5 @@
 
 
 - full screen on Langton makes screen black
+- on/off switch for iterating through generations
+- turmites

@@ -1,5 +1,6 @@
 import sys, pygame, os
 import grid
+import numpy as np
 
 
 def conway_game(dead, live, random):
@@ -129,9 +130,9 @@ def rps_game(rock, paper, scissors, lizard, spock, random):
 
 def langtons_ant():
     # Initialize field
-    screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
-    # screen = pygame.display.set_mode(size, pygame.RESIZABLE)
-    screen.fill(black)
+    # screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+    screen = pygame.display.set_mode(size, pygame.RESIZABLE)
+    screen.fill(light_blue)
     langton.reset(screen)
     langton.transition(screen)
 
@@ -177,6 +178,10 @@ def langtons_ant():
                 sys.exit()
 
         pygame.display.update()
+
+
+def random_color():
+    return tuple(np.random.choice(range(256), size=3))
 
 
 if __name__ == '__main__':
@@ -230,8 +235,13 @@ if __name__ == '__main__':
                         # Recommend value between 0.1 < x < 0.5
     numColors = 3  # 3 for ternary, 5 for quinary
 
-    rules = "RL"
-    colors = [black, white]
+    rules = "LLRRRLRLRLLR"
+    colors = [random_color() for _ in range(len(rules))]
+    # colors = [black, white]
+    # colors = []
+    # color_dict = {"R": black, "L": white}
+    # for i in rules:
+    #     colors.append(color_dict[i])
 
     conway = grid.Conway(width, height, scalar, border, percentRandom)
     rps = grid.RPS(width, height, scalar, border, numColors)
