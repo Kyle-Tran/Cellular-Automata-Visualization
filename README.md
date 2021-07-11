@@ -46,7 +46,7 @@ Neighbors are based upon a [Moore neighbourhood](https://en.wikipedia.org/wiki/M
 - ***conway_colors***: Array of colors for dead and live cells
   - [dead color, live color]
   - Recommend using default [white, duke_blue] or [white, black]
-    
+ ---   
 ### [Multi-state Cellular Automata](https://en.wikipedia.org/wiki/Cellular_automaton)
 
 #### Rules:
@@ -71,7 +71,7 @@ Neighbors are based upon a [Moore neighbourhood](https://en.wikipedia.org/wiki/M
   - [rock, paper, scissors, lizard, spock]
   - Must be of length 5
   - Recommend using default [p1, p2, p3, p4, p5]
-
+---
 ### [Langton's Ant](https://en.wikipedia.org/wiki/Langton%27s_ant)
     Squares on a plane are colored variously either black or white. 
     We arbitrarily identify one square as the "ant" (denoted as red square). 
@@ -111,6 +111,7 @@ Neighbors are based upon a [Moore neighbourhood](https://en.wikipedia.org/wiki/M
 - Going full screen causes screen to go black
   - A temporary fix is to reset entire field (Ctrl + R)
 
-### Other Options
+---
+## OTHER
 - Add more colors below ***"&ast;&ast;&ast; COLORS &ast;&ast;&ast;"***
    - Takes form of three-turple RGB color: (r, g, b)
