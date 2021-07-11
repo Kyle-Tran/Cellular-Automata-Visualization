@@ -2,10 +2,13 @@
 
 Cellular Automata on a 2D lattice.
 
-Run using
+Clone project using:
 
     git clone https://github.com/Kyle-Tran/Cellular-Automata.git
     cd Cellular-Automata
+
+Run project using
+
     python project/main.py
 
 and select parameters in console.
@@ -70,17 +73,18 @@ and select parameters in console.
   - Recommend using default [p1, p2, p3, p4, p5]
 ---
 ### [Langton's Ant](https://en.wikipedia.org/wiki/Langton%27s_ant)
-    Squares on a plane are colored variously either black or white. 
-    We arbitrarily identify one square as the "ant" (denoted as red square). 
-    The ant can travel in any of the four cardinal directions at each step it takes. 
-    The "ant" moves according to given ruleset.
-    Default direction is North ("N").
+  Squares on a plane are colored variously either black or white. 
+  We arbitrarily identify one square as the "ant" (denoted as red square). 
+  The ant can travel in any of the four cardinal directions at each step it takes. 
+  The "ant" moves according to given ruleset.
+
 
 #### Rules: 
-    A simple naming scheme is used: 
-    For each of the successive colors, a letter "L" or "R" is used
-    to indicate whether a left or right turn should be taken. 
-    Langton's ant has the name "RL" in this naming scheme.
+A simple naming scheme is used: 
+
+For each of the successive colors, a letter "L" or "R" is used
+to indicate whether a left or right turn should be taken. 
+Langton's ant has the name "RL" in this naming scheme.
 - **Default Rule 'RL'**:
   - At a white square, turn 90° clockwise, flip the color of the square, move forward one unit
   - At a black square, turn 90° counter-clockwise, flip the color of the square, move forward one unit
