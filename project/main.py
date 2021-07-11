@@ -203,8 +203,8 @@ def langtons_ant():
 
 def random_color():
     """
-    Creates 3-tuple representing RGB value (r, g, b)
-    """
+        Creates 3-tuple representing RGB value (r, g, b)
+        """
     return tuple(np.random.choice(range(256), size=3))
 
 
@@ -217,6 +217,21 @@ if __name__ == '__main__':
     #####################
     # Variables to edit #
     #####################
+    "*** GUI OPTIONS ***"
+    # Scales monitor resolution down by factor of scalar
+    # Recommended 30-60 for average CPU and 10-20 for powerful CPU (Conway / RPS)
+    # Recommend 1-10 for Langton's ant
+    scalar = 40
+
+    # Percent of random cells that are live for Conway's Game of Life (0 < x < 1)
+    # Recommend value between 0.1 < x < 0.5
+    percentRandom = .4
+
+    "*** GAME SPEED ***"
+    # Speed between generations
+    # Recommend number between 1 < x < 60
+    fps = 60
+
     "*** COLORS ***"
     black = (0, 0, 0)
     duke_blue = (1, 33, 105)
@@ -226,55 +241,43 @@ if __name__ == '__main__':
     light_blue = (31, 120, 180)
     red = (228, 26, 28)
 
-    rock = (239, 187, 255)
-    paper = (216, 150, 255)
-    scissors = (190, 41, 236)
-    lizard = (128, 0, 128)
-    spock = (102, 0, 102)
-    # add anymore more colors you would like
+    p1 = (239, 187, 255)
+    p2 = (216, 150, 255)
+    p3 = (190, 41, 236)
+    p4 = (128, 0, 128)
+    p5 = (102, 0, 102)
+    # add anymore more colors you would like below
 
     "*** COLOR LISTS/RULES***"
     # Input color selection into following lists for each game mode
     conway_colors = [white, duke_blue]  # [dead color, live color]
-    rps_colors = [rock, paper, scissors, lizard, spock]  # make sure list is of length 5
+    rps_colors = [p1, p2, p3, p4, p5]  # make sure list is of length 5
 
     # Change rules for Langton's Ant here
     # Use only R's and L's
-    langton_rules = "LLRR"
+    # Be sure len(langton_rules) == len(langton_colors)
+    langton_rules = "RL"
     langton_colors = [random_color() for _ in range(len(langton_rules))]  # random RGB color for each rule
 
-    # # Option to make only black and white colors for each rule
-    # # Example: R = black, L = White
+    # Option to make only black and white colors for each rule
+    # I.e., R = black, L = White
+    # Uncomment lines below to select this option
     # langton_colors = []
     # color_dict = {"R": black, "L": white}
     # for i in langton_rules:
     #     langton_colors.append(color_dict[i])
 
-    "*** GAME SPEED ***"
-    clock = pygame.time.Clock()
-    # Speed between generations
-    # Recommend number between 1 < x < 60
-    fps = 60
 
-    "*** OTHER OPTIONS ***"
-
-    # Scales monitor resolution down by factor of scalar
-    # Recommended 30-60 for average CPU and 10-20 for powerful CPU (Conway / RPS)
-    # Recommend 1-10 for more complex Langton's ant
-    scalar = 40
-
-    # Percent of random cells that are live for Conway's Game of Life (0 < x < 1)
-    # Recommend value between 0.1 < x < 0.5
-    percentRandom = .4
-    ################################################################################
+    #########################################################################################################
 
     ##########################################
     # Game settings - CAN IGNORE BELOW ITEMS #
     ##########################################
 
-    # Center environment, initialize pygame
+    # Center and initialize environment/pygame
     os.environ['SDL_VIDEO_CENTERED'] = '1'
     pygame.init()
+    clock = pygame.time.Clock()
 
     # Setup window for current display resolution
     info = pygame.display.Info()

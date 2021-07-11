@@ -375,3 +375,140 @@ class Langton:
                 self.curr_array[x][y] = -1  # initial field array to all empty (-1)
                 pygame.draw.rect(surface, (255, 255, 255),
                                  [x_pos, y_pos, self.scale - self.border, self.scale - self.border])
+
+
+class Turmite:
+    ######################
+    # Class for Turmites #
+    ######################
+
+    def __init__(self, width, height, scale, border, colors, rules):
+        self.scale = scale
+
+        self.rows = int(width / scale)
+        self.columns = int(height / scale)
+        self.size = (self.rows, self.columns)
+
+        self.curr_array = np.ndarray(shape=self.size)  # Field as 2d array
+        self.border = border  # Lines between cells
+
+        self.direction = "N"  # N, E, S, W
+        self.ant = (-1, -1)  # Ant current position on field
+
+        # Colors [(x,y,z), ..., (xn,yn,zn)], Rules = "RL..."
+        self.rules = rules
+        self.colors = colors
+
+    def transition(self, surface):
+        """
+        Updates cells colors on field between each transition
+        """
+        ant_xpos, ant_ypos = self.ant[0], self.ant[1]
+        ant_xcoord, ant_ycoord = ant_xpos * self.scale, ant_ypos * self.scale
+
+        if self.curr_array[ant_xpos][ant_ypos] == -1:  # curr cell is white (default)
+            self.curr_array[ant_xpos][ant_ypos] = 0  # change cell to first color
+            self.rotate(self.rules[0])  # rotate direction based on first rule
+
+            # Update color of cell ant is currently on
+            # Move ant forward in current direction
+            # Draw ant on that forward cell
+            pygame.draw.rect(surface, self.colors[0],
+                             [ant_xcoord, ant_ycoord, self.scale - self.border, self.scale - self.border])
+            self.move()
+            pygame.draw.rect(surface, (255, 0, 0),
+                             [self.ant[0] * self.scale, self.ant[1] * self.scale,
+                              self.scale - self.border, self.scale - self.border])
+
+        else:
+            # updates value of cell to n+1 color
+            # if end of color list, return to index 0
+            update_idx = (int(self.curr_array[ant_xpos][ant_ypos]) + 1) % len(self.colors)
+            self.curr_array[ant_xpos][ant_ypos] = update_idx
+
+            # rotate direction based on rule of next color
+            self.rotate(self.rules[update_idx])
+
+            # Update color of cell ant is currently on
+            # Move ant forward in current direction
+            # Draw ant on that forward cell
+            pygame.draw.rect(surface, self.colors[update_idx],
+                             [ant_xcoord, ant_ycoord, self.scale - self.border, self.scale - self.border])
+            self.move()
+            pygame.draw.rect(surface, (255, 0, 0),
+                             [self.ant[0] * self.scale, self.ant[1] * self.scale,
+                              self.scale - self.border, self.scale - self.border])
+
+    def move(self):
+        """
+        Changes ant's current location to cell 1 away in it's current direction
+        """
+        x, y = self.ant[0], self.ant[1]
+        # Stitches field for when ant is at edge
+        addx, addy = (x + 1) % self.rows, (y+1) % self.columns
+        minusx, minusy = (x - 1) % self.rows, (y - 1) % self.columns
+        if self.direction == "N":
+            self.ant = (x, minusy)
+        elif self.direction == "E":
+            self.ant = (addx, y)
+        elif self.direction == "S":
+            self.ant = (x, addy)
+        elif self.direction == "W":
+            self.ant = (minusx, y)
+
+    def rotate(self, rule):
+        """
+        Changes current direction based on rule
+        """
+        if rule == "R":
+            if self.direction == "N":
+                self.direction = "E"
+            elif self.direction == "E":
+                self.direction = "S"
+            elif self.direction == "S":
+                self.direction = "W"
+            elif self.direction == "W":
+                self.direction = "N"
+
+        elif rule == "L":
+            if self.direction == "N":
+                self.direction = "W"
+            elif self.direction == "E":
+                self.direction = "N"
+            elif self.direction == "S":
+                self.direction = "E"
+            elif self.direction == "W":
+                self.direction = "S"
+
+    def click(self, pos, direction, surface):
+        """
+        Clicking on cell spawns ant in specified direction
+        """
+        x, y = int(pos[0] / self.scale), int(pos[1] / self.scale)
+        prev_x, prev_y = self.ant[0] * self.scale, self.ant[1] * self.scale
+        new_x, new_y = x * self.scale, y * self.scale
+
+        if self.ant != (-1, -1):  # There is an ant on the field currently
+            # make sure previous cell where ant was can still update later
+            # by making that cell empty (white)
+            self.curr_array[self.ant[0], self.ant[1]] = -1
+            # On clicking, deletes previous ant
+            pygame.draw.rect(surface, (255, 255, 255),
+                             [prev_x, prev_y, self.scale - self.border, self.scale - self.border])
+
+        # Creates new ant in specified direction
+        self.ant = (x, y)
+        pygame.draw.rect(surface, (255, 0, 0),
+                         [new_x, new_y, self.scale - self.border, self.scale - self.border])
+        self.direction = direction
+
+    def reset(self, surface):
+        """
+        Clears entire field to all dead cells
+        """
+        for x in range(self.rows):
+            for y in range(self.columns):
+                x_pos, y_pos = x * self.scale, y * self.scale
+                self.curr_array[x][y] = -1  # initial field array to all empty (-1)
+                pygame.draw.rect(surface, (255, 255, 255),
+                                 [x_pos, y_pos, self.scale - self.border, self.scale - self.border])

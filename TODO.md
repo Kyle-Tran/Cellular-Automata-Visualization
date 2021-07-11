@@ -1,11 +1,12 @@
 ## To Do
 
 - Add paint brush functionality to changing cells
+- Refactor classes to use inheritance
 - Improve rendering efficiency 
 - ~~Langton's ants~~
-- Conway setups
+- Conway/Langton setups
 - setup.py
-- GUI
+- Custom GUI
 
 
 - full screen on Langton makes screen black
