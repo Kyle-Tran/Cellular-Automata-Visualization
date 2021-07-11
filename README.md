@@ -15,9 +15,6 @@ and select parameters in console.
 - Pygame
 - Numpy
 
-## Neighborhoods
-Neighbors are based upon a [Moore neighbourhood](https://en.wikipedia.org/wiki/Moore_neighborhood). 
-
 ## Individual Modes
 
 ### [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
@@ -35,7 +32,7 @@ Neighbors are based upon a [Moore neighbourhood](https://en.wikipedia.org/wiki/M
 - **Ctrl + R**: Reset field
 - **Ctrl + T**: Randomize field
 
-#### Recommended Options (Edit in main.py):
+#### Recommended Options (Edit in *main.py*):
 
 - ***percentRandom***: Change percentage of cells that spawn live upon randomizing field
   - Recommend value between 0.1-0.5
@@ -61,7 +58,7 @@ Neighbors are based upon a [Moore neighbourhood](https://en.wikipedia.org/wiki/M
 - **Ctrl + R**: Reset field
 - **Ctrl + T**: Randomize field
   
-#### Recommended Options (Edit in main.py):
+#### Recommended Options (Edit in *main.py*):
 
 - ***scalar***: Scales GUI down by factor of *scalar* based on monitor resolution
   - Recommend value between 10-20 for powerful CPU otherwise 30-60
@@ -96,7 +93,7 @@ Neighbors are based upon a [Moore neighbourhood](https://en.wikipedia.org/wiki/M
 - **Spacebar**: Iterate continuously through generations
 - **Ctrl + R**: Reset field 
 
-#### Recommended Options (Edit in main.py):
+#### Recommended Options (Edit in *main.py*):
 - ***scalar***: Scales GUI down by factor of *scalar* based on monitor resolution
   - Recommend value between 1-10
 - ***langton_rules***: String for rule-set for ant
@@ -112,6 +109,9 @@ Neighbors are based upon a [Moore neighbourhood](https://en.wikipedia.org/wiki/M
   - A temporary fix is to reset entire field (Ctrl + R)
 
 ---
+## Neighborhoods
+Neighbors are based upon a [Moore neighbourhood](https://en.wikipedia.org/wiki/Moore_neighborhood). 
+
 ## OTHER
-- Add more colors below ***"&ast;&ast;&ast; COLORS &ast;&ast;&ast;"***
-   - Takes form of three-turple RGB color: (r, g, b)
+Add your own colors below ***"&ast;&ast;&ast; COLORS &ast;&ast;&ast;"*** in *main.py*
+   - Takes form of three-tuple RGB color: (r, g, b)
