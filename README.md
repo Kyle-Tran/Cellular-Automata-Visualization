@@ -1,11 +1,11 @@
-# Cellular Automata
+# Cellular Automata Visualization
 
-Cellular Automata on a 2D lattice.
+[Cellular Automata](https://en.wikipedia.org/wiki/Cellular_automaton) on a 2D lattice.
 
 Clone project using:
 
-    git clone https://github.com/Kyle-Tran/Cellular-Automata.git
-    cd Cellular-Automata
+    git clone https://github.com/Kyle-Tran/Cellular-Automata-Visualization.git
+    cd Cellular-Automata-Visualization
 
 Run project using
 
