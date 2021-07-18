@@ -230,7 +230,7 @@ if __name__ == '__main__':
     "*** GAME SPEED ***"
     # Speed between generations
     # Recommend number between 1 < x < 60
-    fps = 60
+    fps = 15
 
     "*** COLORS ***"
     black = (0, 0, 0)
@@ -250,7 +250,7 @@ if __name__ == '__main__':
 
     "*** COLOR LISTS/RULES***"
     # Input color selection into following lists for each game mode
-    conway_colors = [white, duke_blue]  # [dead color, live color]
+    conway_colors = [white, black]  # [dead color, live color]
     rps_colors = [p1, p2, p3, p4, p5]  # make sure list is of length 5
 
     # Change rules for Langton's Ant here
