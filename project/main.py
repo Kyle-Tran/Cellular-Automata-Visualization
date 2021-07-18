@@ -221,7 +221,7 @@ if __name__ == '__main__':
     # Scales monitor resolution down by factor of scalar
     # Recommended 30-60 for average CPU and 10-20 for powerful CPU (Conway / RPS)
     # Recommend 1-10 for Langton's ant
-    scalar = 40
+    scalar = 10
 
     # Percent of random cells that are live for Conway's Game of Life (0 < x < 1)
     # Recommend value between 0.1 < x < 0.5
@@ -230,7 +230,7 @@ if __name__ == '__main__':
     "*** GAME SPEED ***"
     # Speed between generations
     # Recommend number between 1 < x < 60
-    fps = 15
+    fps = 60
 
     "*** COLORS ***"
     black = (0, 0, 0)
@@ -250,22 +250,22 @@ if __name__ == '__main__':
 
     "*** COLOR LISTS/RULES***"
     # Input color selection into following lists for each game mode
-    conway_colors = [white, black]  # [dead color, live color]
+    conway_colors = [white, duke_blue]  # [dead color, live color]
     rps_colors = [p1, p2, p3, p4, p5]  # make sure list is of length 5
 
     # Change rules for Langton's Ant here
     # Use only R's and L's
     # Be sure len(langton_rules) == len(langton_colors)
     langton_rules = "RL"
-    langton_colors = [random_color() for _ in range(len(langton_rules))]  # random RGB color for each rule
+    # langton_colors = [random_color() for _ in range(len(langton_rules))]  # random RGB color for each rule
 
     # Option to make only black and white colors for each rule
     # I.e., R = black, L = White
     # Uncomment lines below to select this option
-    # langton_colors = []
-    # color_dict = {"R": black, "L": white}
-    # for i in langton_rules:
-    #     langton_colors.append(color_dict[i])
+    langton_colors = []
+    color_dict = {"R": black, "L": white}
+    for i in langton_rules:
+        langton_colors.append(color_dict[i])
 
 
     #########################################################################################################

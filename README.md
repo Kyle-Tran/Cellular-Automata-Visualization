@@ -22,6 +22,8 @@ and select parameters in console.
 
 ### [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
+![alt text](https://raw.githubusercontent.com/Kyle-Tran/Cellular-Automata-Visualization/master/resources/Gosper%20Glider%20Gun.gif)
+
 #### Rules:
 - Any live cell with two or three live neighbors survives.
 - Any dead cell with three live neighbors becomes a live cell.
