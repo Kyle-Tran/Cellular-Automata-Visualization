@@ -51,6 +51,8 @@ and select parameters in console.
  ---   
 ### [Multi-state Cellular Automata](https://en.wikipedia.org/wiki/Cellular_automaton)
 
+![alt text](https://raw.githubusercontent.com/Kyle-Tran/Cellular-Automata-Visualization/master/resources/Multi%20State%20CA%20-%20RPS.gif)
+
 #### Rules:
 - Generalized rock, paper, scissors rules (Ternary system)
     - Quinary system based on [rock, paper, scissors, lizard, spock rules](https://bigbangtheory.fandom.com/wiki/Rock,_Paper,_Scissors,_Lizard,_Spock)
@@ -80,6 +82,7 @@ and select parameters in console.
   The ant can travel in any of the four cardinal directions at each step it takes. 
   The "ant" moves according to given ruleset.
 
+![alt text](https://raw.githubusercontent.com/Kyle-Tran/Cellular-Automata-Visualization/master/resources/Langton's%20Ant.gif)
 
 #### Rules: 
 A simple naming scheme is used: 
